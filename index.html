@@ -767,7 +767,7 @@
           <button onclick="refreshPreview()" style="background:none;border:none;cursor:pointer;color:#555;font-size:14px;" title="Refresh">↻</button>
           <button onclick="togglePreview()" style="background:none;border:none;cursor:pointer;color:#555;font-size:14px;" title="Close">✕</button>
         </div>
-        <iframe id="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+        <iframe id="preview-iframe" sandbox="allow-scripts"></iframe>
       </div>
     </div>
   </div>
@@ -972,8 +972,7 @@ async function callGemini(modelName, systemPrompt, userMessage, history = []) {
     contents,
     generationConfig: {
       temperature: 0.7,
-      maxOutputTokens: 8192,
-      thinkingConfig: { thinkingBudget: 0 }
+      maxOutputTokens: 8192
     }
   };
 
@@ -1569,11 +1568,11 @@ function refreshPreview() {
 
     // Inline JS files
     Object.keys(state.files).forEach(name => {
-      if (name.endsWith('.js') && name !== 'app.js' || name === 'app.js') {
+      if (name.endsWith('.js')) {
         const jsContent = state.files[name];
         injected = injected.replace(
-          new RegExp(`<script[^>]*src=["']${name}["'][^>]*></script>`, 'g'),
-          `<script>${jsContent}</script>`
+          new RegExp('<scr' + 'ipt[^>]*src=[\"\']' + name + '[\"\'][^>]*><\/scr' + 'ipt>', 'g'),
+          '<scr' + 'ipt>' + jsContent + '<\/scr' + 'ipt>'
         );
       }
     });
